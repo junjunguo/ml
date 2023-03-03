@@ -1,10 +1,20 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App'
-import './index.css'
+import "./styles/index.scss";
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+import { App } from "./App";
+import { FaceDetection } from "./faceDetect/FaceDetection";
+import { RouterPath } from "./types/RouterPath.enum";
+
+const router = createBrowserRouter([
+  { path: RouterPath.Main, element: <App /> },
+  { path: RouterPath.FaceDetection, element: <FaceDetection /> },
+]);
+
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-)
+    <RouterProvider router={router} />
+  </React.StrictMode>
+);
