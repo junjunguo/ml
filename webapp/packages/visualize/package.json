@@ -1,0 +1,6 @@
+{
+  "name": "@js/visualize",
+  "version": "1.0.0",
+  "description": "ML Visualization",
+  "main": "index.ts"
+}
