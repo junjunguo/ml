@@ -1,4 +1,4 @@
 export enum RouterPath {
   Main = "/",
-  FaceDetection = "face-detection",
+  FaceDetection = "/face-detection",
 }

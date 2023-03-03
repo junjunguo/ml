@@ -25,5 +25,10 @@ module.exports = {
         "@typescript-eslint/strict-boolean-expressions": "warn",
         "simple-import-sort/imports": "warn",
         "simple-import-sort/exports": "warn"
+    },
+    "settings":{
+        "react":{
+            "version": "detect"
+        }
     }
 }
