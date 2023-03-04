@@ -18,9 +18,13 @@
     "prod": "npm run verify && npm run test && npm run build"
   },
   "dependencies": {
+    "@mediapipe/face_detection": "^0.4.1646425229",
+    "@tensorflow-models/face-detection": "^1.0.1",
+    "@tensorflow/tfjs": "^4.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.8.2"
+    "react-router-dom": "^6.8.2",
+    "scatter-gl": "~0.0.13"
   },
   "devDependencies": {
     "@iconify/react": "^4.1.0",
@@ -44,6 +48,7 @@
     "vitest": "^0.29.2"
   },
   "workspaces": [
-    "packages/visualize"
+    "packages/visualize",
+    "packages/tf"
   ]
 }
