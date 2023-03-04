@@ -22,9 +22,11 @@ module.exports = {
     "rules": {
         "no-unused-vars": "off",
         "@typescript-eslint/no-unused-vars": "warn",
+        "@typescript-eslint/no-non-null-assertion": "warn",
         "@typescript-eslint/strict-boolean-expressions": "warn",
+        "@typescript-eslint/explicit-function-return-type": "warn",
         "simple-import-sort/imports": "warn",
-        "simple-import-sort/exports": "warn"
+        "simple-import-sort/exports": "warn",
     },
     "settings":{
         "react":{
