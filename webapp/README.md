@@ -1,1 +1,8 @@
-# Web App
+# WebApp
+
+## Technologies
+
+- Vitejs
+- React
+- Typescripts
+- TensorflowJS
