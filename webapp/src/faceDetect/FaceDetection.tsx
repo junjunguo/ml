@@ -1,5 +1,6 @@
 import "./faceDetection.scss";
 
+import { runFaceDetecter, STATE, VIDEO_SIZE } from "@js/tf";
 import { CanvasElement, VideoElement } from "@js/visualize";
 import React, { type FC, useEffect, useState } from "react";
 
@@ -10,9 +11,8 @@ const mediaConfig: MediaStreamConstraints = {
   video: {
     // front camera if available
     facingMode: "user",
-    width: 270, // 360
-    height: 360, // 640
     frameRate: { ideal: 60 },
+    ...VIDEO_SIZE[STATE.camera.sizeOption],
   },
 };
 
@@ -25,8 +25,9 @@ export const FaceDetection: FC = () => {
   );
 
   const [videoEl, setVideoEl] = useState<HTMLVideoElement | null>(null);
+  const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
 
-  useEffect(() => {
+  const mediaStreamHandler = (): void => {
     navigator.mediaDevices
       .getUserMedia(mediaConfig)
       .then((stream) => {
@@ -35,14 +36,28 @@ export const FaceDetection: FC = () => {
       .catch((e) => {
         console.error(e);
       });
+  };
+
+  useEffect(() => {
+    mediaStreamHandler();
   }, []);
+
+  useEffect(() => {
+    if (ctx != null && videoEl != null) {
+      runFaceDetecter(videoEl, ctx).catch((e) => {
+        console.error(e);
+      });
+    }
+  }, [ctx, videoEl]);
 
   return (
     <div className="face-detection">
       <div id="stats"></div>
       <div className="main">
         <div className="canvas-wrapper">
-          {videoEl != null && <CanvasElement videoEl={videoEl} />}
+          {videoEl != null && (
+            <CanvasElement videoEl={videoEl} ctxEvt={setCtx} />
+          )}
           {mediaStream != null && (
             <VideoElement stream={mediaStream} videoEvt={setVideoEl} />
           )}
