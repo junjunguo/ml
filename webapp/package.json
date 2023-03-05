@@ -3,6 +3,12 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://junjunguo.github.io/ml/",
+  "repository": {
+    "type": "github",
+    "directory": "webapp",
+    "url": "https://github.com/junjunguo/ml.git"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",

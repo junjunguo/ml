@@ -2,5 +2,11 @@
   "name": "@js/visualize",
   "version": "1.0.0",
   "description": "ML Visualization",
-  "main": "index.ts"
+  "main": "index.ts",
+  "homepage": "https://junjunguo.github.io/ml/",
+  "repository": {
+    "type": "github",
+    "directory": "webapp/packages/visualize",
+    "url": "https://github.com/junjunguo/ml.git"
+  }
 }
