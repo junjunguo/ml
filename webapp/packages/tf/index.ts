@@ -1,3 +1,3 @@
 export * from "./constants";
-export * from "./tfUtils";
+export * from "./faceDetectionUtils";
 export * from "./utils";

@@ -24,6 +24,7 @@ import {
   type VIDEO_SIZE,
 } from "./constants";
 import { type BackendTypes } from "./types";
+import { drawCtx, drawPath } from "./utils";
 
 export const STATE: {
   camera: { targetFPS: number; sizeOption: keyof typeof VIDEO_SIZE };
@@ -44,6 +45,57 @@ export const STATE: {
     boundingBox: true,
     keypoints: true,
   },
+};
+
+/**
+ * Draw the keypoints on the video.
+ * @param ctx 2D rendering context.
+ * @param faces A list of faces to render.
+ * @param boundingBox Whether or not to display the bounding box.
+ * @param showKeypoints Whether or not to display the keypoints.
+ */
+export const drawResults = (
+  ctx: CanvasRenderingContext2D,
+  faces: Face[],
+  boundingBox: boolean,
+  showKeypoints: boolean
+): void => {
+  faces.forEach((face) => {
+    const keypoints = face.keypoints.map((keypoint) => [
+      keypoint.x,
+      keypoint.y,
+    ]);
+
+    if (boundingBox) {
+      ctx.strokeStyle = RED;
+      ctx.lineWidth = 1;
+
+      const box = face.box;
+      drawPath(
+        ctx,
+        [
+          [box.xMin, box.yMin],
+          [box.xMax, box.yMin],
+          [box.xMax, box.yMax],
+          [box.xMin, box.yMax],
+        ],
+        true
+      );
+    }
+
+    if (showKeypoints) {
+      ctx.fillStyle = GREEN;
+
+      for (let i = 0; i < NUM_KEYPOINTS; i++) {
+        const x = keypoints[i][0];
+        const y = keypoints[i][1];
+
+        ctx.beginPath();
+        ctx.arc(x, y, 3, 0, 2 * Math.PI);
+        ctx.fill();
+      }
+    }
+  });
 };
 
 export const createFaceDetector = async (): Promise<
@@ -156,75 +208,6 @@ export const setBackendAndEnvFlags = async (
   }
 };
 
-export const drawPath = (
-  ctx: CanvasRenderingContext2D,
-  points: Array<[number, number]>,
-  closePath: boolean
-): void => {
-  const region = new Path2D();
-  region.moveTo(points[0][0], points[0][1]);
-  for (let i = 1; i < points.length; i++) {
-    const point = points[i];
-    region.lineTo(point[0], point[1]);
-  }
-
-  if (closePath) {
-    region.closePath();
-  }
-  ctx.stroke(region);
-};
-
-/**
- * Draw the keypoints on the video.
- * @param ctx 2D rendering context.
- * @param faces A list of faces to render.
- * @param boundingBox Whether or not to display the bounding box.
- * @param showKeypoints Whether or not to display the keypoints.
- */
-export const drawResults = (
-  ctx: CanvasRenderingContext2D,
-  faces: Face[],
-  boundingBox: boolean,
-  showKeypoints: boolean
-): void => {
-  faces.forEach((face) => {
-    const keypoints = face.keypoints.map((keypoint) => [
-      keypoint.x,
-      keypoint.y,
-    ]);
-
-    if (boundingBox) {
-      ctx.strokeStyle = RED;
-      ctx.lineWidth = 1;
-
-      const box = face.box;
-      drawPath(
-        ctx,
-        [
-          [box.xMin, box.yMin],
-          [box.xMax, box.yMin],
-          [box.xMax, box.yMax],
-          [box.xMin, box.yMax],
-        ],
-        true
-      );
-    }
-
-    if (showKeypoints) {
-      ctx.fillStyle = GREEN;
-
-      for (let i = 0; i < NUM_KEYPOINTS; i++) {
-        const x = keypoints[i][0];
-        const y = keypoints[i][1];
-
-        ctx.beginPath();
-        ctx.arc(x, y, 3, 0, 2 * Math.PI);
-        ctx.fill();
-      }
-    }
-  });
-};
-
 export const runtimeParams: {
   detector?: FaceDetector;
   startInferenceTime?: number;
@@ -297,17 +280,6 @@ export const endEstimateFaceStats = (): void => {
   }
 };
 
-const drawCtx = (): void => {
-  if (runtimeParams.ctx == null || runtimeParams.video == null) return;
-  runtimeParams.ctx.drawImage(
-    runtimeParams.video,
-    0,
-    0,
-    runtimeParams.video.videoWidth,
-    runtimeParams.video.videoHeight
-  );
-};
-
 export const renderResult = async (): Promise<void> => {
   if (runtimeParams.video == null) return;
 
@@ -343,7 +315,8 @@ export const renderResult = async (): Promise<void> => {
     endEstimateFaceStats();
   }
 
-  drawCtx();
+  if (runtimeParams.ctx != null)
+    drawCtx(runtimeParams.video, runtimeParams.ctx);
 
   // The null check makes sure the UI is not in the middle of changing to a
   // different model. If during model change, the result is from an old model,
