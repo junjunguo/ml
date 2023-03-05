@@ -1,10 +1,10 @@
-import "./faceDetection.scss";
+import "./faceDetectionPage.scss";
 
 import { runFaceDetecter, STATE, VIDEO_SIZE } from "@js/tf";
 import { CanvasElement, VideoElement } from "@js/visualize";
 import React, { type FC, useEffect, useState } from "react";
 
-import { Nav } from "../nav/Nav";
+import { Nav } from "../../nav/Nav";
 
 const mediaConfig: MediaStreamConstraints = {
   audio: false,
@@ -19,7 +19,7 @@ const mediaConfig: MediaStreamConstraints = {
 /***
  * @see https://github.com/tensorflow/tfjs-models/blob/master/face-detection/README.md
  */
-export const FaceDetection: FC = () => {
+export const FaceDetectionPage: FC = () => {
   const [mediaStream, setMediaStream] = useState<MediaStream | undefined>(
     undefined
   );
