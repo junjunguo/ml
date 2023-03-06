@@ -1,8 +1,8 @@
 import "./emotionDetectionPage.scss";
 
-import { runFaceDetecter, STATE, VIDEO_SIZE } from "@js/tf";
-import { runEmotionDetection } from "@js/tf/emotionDetectionUtils";
-import { CanvasElement, VideoElement } from "@js/visualize";
+import { runEmotionDetection } from "@jj/emotion";
+import { STATE, VIDEO_SIZE } from "@jj/tf";
+import { VideoElement } from "@jj/visualize";
 import React, { type FC, useEffect, useState } from "react";
 
 import { Nav } from "../../nav/Nav";
@@ -23,7 +23,6 @@ export const EmotionDetectionPage: FC = () => {
   );
 
   const [videoEl, setVideoEl] = useState<HTMLVideoElement | null>(null);
-  const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
 
   const mediaStreamHandler = (): void => {
     navigator.mediaDevices
@@ -53,9 +52,6 @@ export const EmotionDetectionPage: FC = () => {
       <div id="stats"></div>
       <div className="main">
         <div className="canvas-wrapper">
-          {/* {videoEl != null && (
-            <CanvasElement videoEl={videoEl} ctxEvt={setCtx} />
-          )} */}
           {mediaStream != null && (
             <VideoElement stream={mediaStream} videoEvt={setVideoEl} />
           )}

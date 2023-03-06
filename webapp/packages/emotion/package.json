@@ -1,0 +1,12 @@
+{
+  "name": "@jj/emotion",
+  "version": "1.0.0",
+  "description": "Emotion detector",
+  "main": "index.ts",
+  "homepage": "https://junjunguo.github.io/ml/",
+  "repository": {
+    "type": "github",
+    "directory": "webapp/packages/emotion",
+    "url": "https://github.com/junjunguo/ml.git"
+  }
+}

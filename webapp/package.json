@@ -55,6 +55,7 @@
   },
   "workspaces": [
     "packages/visualize",
+    "packages/emotion",
     "packages/tf"
   ]
 }
