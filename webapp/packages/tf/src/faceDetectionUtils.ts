@@ -15,6 +15,7 @@ import {
 } from "@tensorflow-models/face-detection";
 import { type MediaPipeFaceDetectorModelType } from "@tensorflow-models/face-detection/dist/mediapipe/types";
 
+import { drawCtx, drawPath } from "./utils";
 import {
   GREEN,
   MODEL_BACKEND_MAP,
@@ -24,7 +25,6 @@ import {
   type VIDEO_SIZE,
 } from "./constants";
 import { type BackendTypes } from "./types";
-import { drawCtx, drawPath } from "./utils";
 
 export const STATE: {
   camera: { targetFPS: number; sizeOption: keyof typeof VIDEO_SIZE };

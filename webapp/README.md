@@ -15,7 +15,7 @@ To load a pretrained TensorFlow SavedModel or TensorFlow Hub module into the bro
 
 #### colab
 
-Easy way to run converter on colab:
+Easy way to run converter on colab (tensorflowjs is supported by limited Python versions):
 
 ```ipynb
 !python --version  # tested Python 3.8.10 works

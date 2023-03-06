@@ -1,2 +1,2 @@
-export * from "./CanvasElement";
-export * from "./VideoElement";
+export * from "./src/CanvasElement";
+export * from "./src/VideoElement";
