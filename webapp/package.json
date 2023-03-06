@@ -20,6 +20,7 @@
     "verify": "npm run lint & npm run prettier",
     "fix": "npm run lint:fix & npm run prettier:fix",
     "test": "vitest run",
+    "test:watch": "vitest",
     "coverage": "vitest run --coverage",
     "prod": "npm run verify && npm run test && npm run build"
   },
@@ -47,6 +48,7 @@
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-simple-import-sort": "^10.0.0",
+    "jsdom": "^21.1.0",
     "prettier": "^2.8.4",
     "sass": "^1.58.3",
     "typescript": "^4.9.3",

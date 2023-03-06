@@ -48,14 +48,11 @@ export const EmotionDetectionPage: FC = () => {
   }, [videoEl]);
 
   return (
-    <div className="face-detection">
-      <div id="stats"></div>
+    <div className="emotion-detection">
       <div className="main">
-        <div className="canvas-wrapper">
-          {mediaStream != null && (
-            <VideoElement stream={mediaStream} videoEvt={setVideoEl} />
-          )}
-        </div>
+        {mediaStream != null && (
+          <VideoElement stream={mediaStream} videoEvt={setVideoEl} />
+        )}
       </div>
 
       <div>

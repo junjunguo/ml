@@ -2,23 +2,18 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  align-items: center;
 
-  & > #stats {
-    position: relative;
-    width: 100%;
-    height: 80px;
-  }
   & .main {
     position: relative;
-
-    & > .canvas-wrapper {
-      position: relative;
       & > video {
         transform: scaleX(-1);
         // visibility: hidden;
         width: auto;
         height: auto;
       }
-    }
   }
+  & nav > ul > li {
+    text-align: center;
+  } 
 }
