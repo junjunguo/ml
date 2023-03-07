@@ -1,0 +1,29 @@
+.img-emotion-detection {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  & .main {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    & > div {
+      padding: 0.2rem;
+      min-width: 2rem;
+      min-height: 2rem;
+      background-color: brown;
+
+      & > input {
+        margin: 1rem;
+      }
+    }
+  }
+
+  & nav {
+    padding: 2rem 0.6rem;
+    & > ul > li {
+      text-align: center;
+    }
+  }
+}
