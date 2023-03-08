@@ -26,7 +26,7 @@ export const predictEmotion = async (
   console.log("backend", getBackend());
   console.log("env", env());
 
-  const model = await loadGraphModel(MODEL_URL); // TypeError: env(...).platform.isTypedArray is not a function
+  const model = await loadGraphModel(MODEL_URL);
 
   console.log("model version: ", model.modelVersion);
   console.log("model nodes: ", model.outputNodes);
