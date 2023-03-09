@@ -18,6 +18,10 @@
         margin: 1rem;
       }
     }
+
+    & > .chart {
+      min-width: 480px;
+    }
   }
 
   & nav {

@@ -51,7 +51,7 @@ export const ImgEmotionDetectionPage: FC = () => {
             <ImgElement imgFile={imgFile} imgEvt={imgElEventHandler} />
           )}
         </div>
-        <div>
+        <div className="chart">
           <TfVisBarChart data={chartData} />
         </div>
       </div>
