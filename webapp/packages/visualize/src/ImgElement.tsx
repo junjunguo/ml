@@ -1,20 +1,24 @@
-import React, { type FC, useEffect, useRef } from "react";
+import React, { type FC, useEffect, useRef, useState } from "react";
 
 export const ImgElement: FC<{
   imgFile: File;
   imgEvt: (imgEl: HTMLImageElement) => void;
 }> = ({ imgFile, imgEvt }) => {
   const ref = useRef<HTMLImageElement | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const img = ref.current;
-    if (img == null || img.src?.length > 1) return;
+    const objUrl = URL.createObjectURL(imgFile);
+    if (img == null || isLoading || img.src === objUrl) return;
+    setIsLoading(true);
 
-    img.src = URL.createObjectURL(imgFile);
+    img.src = objUrl;
     img.onload = () => {
       imgEvt(img);
+      setIsLoading(false);
     };
-  }, [ref.current]);
+  }, [ref.current, imgFile]);
 
   return <img ref={ref} />;
 };

@@ -17,16 +17,17 @@ export const ImgEmotionDetectionPage: FC = () => {
   >();
 
   const imgInputEventHandler = (e: ChangeEvent<HTMLInputElement>): void => {
+    // console.log("new img ", e.target.files?.[0].name);
     if (e.target.files?.[0] != null) {
       setImgFile(e.target.files[0]);
     }
   };
 
   const imgElEventHandler = (imgEl: HTMLImageElement): void => {
-    console.log("start predict");
+    // console.log("start predict");
     predictEmotion(imgEl)
       .then((result) => {
-        console.log("r: ", result);
+        // console.log("r: ", result);
         // setChartData(result.map((v, i) => ({ index: i, value: v })));
         setChartData(result);
       })
