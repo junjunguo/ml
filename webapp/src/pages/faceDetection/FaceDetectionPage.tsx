@@ -1,7 +1,7 @@
 import "./faceDetectionPage.scss";
 
-import { runFaceDetecter, STATE, VIDEO_SIZE } from "@js/tf";
-import { CanvasElement, VideoElement } from "@js/visualize";
+import { runFaceDetecter, STATE, VIDEO_SIZE } from "@jj/tf";
+import { CanvasElement, VideoElement } from "@jj/visualize";
 import React, { type FC, useEffect, useState } from "react";
 
 import { Nav } from "../../nav/Nav";
@@ -52,16 +52,11 @@ export const FaceDetectionPage: FC = () => {
 
   return (
     <div className="face-detection">
-      <div id="stats"></div>
       <div className="main">
-        <div className="canvas-wrapper">
-          {videoEl != null && (
-            <CanvasElement videoEl={videoEl} ctxEvt={setCtx} />
-          )}
-          {mediaStream != null && (
-            <VideoElement stream={mediaStream} videoEvt={setVideoEl} />
-          )}
-        </div>
+        {videoEl != null && <CanvasElement videoEl={videoEl} ctxEvt={setCtx} />}
+        {mediaStream != null && (
+          <VideoElement stream={mediaStream} videoEvt={setVideoEl} />
+        )}
       </div>
 
       <div>

@@ -3,22 +3,27 @@
   display: flex;
   flex-direction: column;
 
-  & > #stats {
-    position: relative;
-    width: 100%;
-    height: 80px;
-  }
   & .main {
-    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 
-    & > .canvas-wrapper {
-      position: relative;
-      & > video {
-        transform: scaleX(-1);
-        // visibility: hidden;
-        width: auto;
-        height: auto;
-      }
+    & > * {
+      padding: 0.2rem;
+    }
+
+    & > video {
+      transform: scaleX(-1);
+      // visibility: hidden;
+      width: auto;
+      height: auto;
+    }
+  }
+
+  & nav {
+    padding: 2rem 0.6rem;
+    & > ul > li {
+      text-align: center;
     }
   }
 }

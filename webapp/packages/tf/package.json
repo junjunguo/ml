@@ -1,5 +1,5 @@
 {
-  "name": "@js/tf",
+  "name": "@jj/tf",
   "version": "1.0.0",
   "description": "Tensorflow JS utils",
   "main": "index.ts",

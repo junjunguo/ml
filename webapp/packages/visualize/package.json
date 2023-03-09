@@ -1,5 +1,5 @@
 {
-  "name": "@js/visualize",
+  "name": "@jj/visualize",
   "version": "1.0.0",
   "description": "ML Visualization",
   "main": "index.ts",
