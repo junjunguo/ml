@@ -55,7 +55,7 @@ export const ImgEmotionDetectionPage: FC = () => {
         </div>
         <div className="chart">
           {/* <TfVisBarChart data={chartData} /> */}
-          <ChartjsBarChart data={chartData} />
+          {chartData != null && <ChartjsBarChart data={chartData} />}
         </div>
       </div>
       <div>

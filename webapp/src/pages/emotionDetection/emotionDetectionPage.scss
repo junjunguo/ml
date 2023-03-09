@@ -6,14 +6,14 @@
 
   & .main {
     position: relative;
-      & > video {
-        transform: scaleX(-1);
-        // visibility: hidden;
-        width: auto;
-        height: auto;
-      }
+    & > video {
+      transform: scaleX(-1);
+      // visibility: hidden;
+      width: auto;
+      height: auto;
+    }
   }
   & nav > ul > li {
     text-align: center;
-  } 
+  }
 }

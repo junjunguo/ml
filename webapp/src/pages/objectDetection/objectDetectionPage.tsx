@@ -6,7 +6,7 @@ import React, { type ChangeEvent, type FC, useState } from "react";
 
 import { Nav } from "../../nav/Nav";
 
-const model: tf.GraphModel | null = null;
+// const model: tf.GraphModel | null = null;
 
 /** TODO
  * Source: TF hub
