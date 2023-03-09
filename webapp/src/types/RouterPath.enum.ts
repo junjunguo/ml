@@ -3,4 +3,5 @@ export enum RouterPath {
   FaceDetection = "/face-detection",
   EmotionDetection = "/emotion-detection",
   ImgEmotionDetection = "/img-emotion-detection",
+  ObjectDetection = "/object-detection",
 }

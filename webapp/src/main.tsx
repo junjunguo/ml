@@ -10,6 +10,7 @@ import {
   ImgEmotionDetectionPage,
 } from "./pages/emotionDetection";
 import { FaceDetectionPage } from "./pages/faceDetection";
+import { ObjectDetectionPage } from "./pages/objectDetection/objectDetectionPage";
 import { RouterPath } from "./types/RouterPath.enum";
 
 const router = createHashRouter([
@@ -19,6 +20,10 @@ const router = createHashRouter([
   {
     path: RouterPath.ImgEmotionDetection,
     element: <ImgEmotionDetectionPage />,
+  },
+  {
+    path: RouterPath.ObjectDetection,
+    element: <ObjectDetectionPage />,
   },
 ]);
 

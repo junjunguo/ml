@@ -1,42 +1,44 @@
 import {
   browser,
-  env,
-  getBackend,
   type GraphModel,
   loadGraphModel,
-  type NamedTensorMap,
   type Tensor,
 } from "@tensorflow/tfjs";
 
-const MODEL_URL = "emotion_detection.json";
+import { graphModelUrl } from "./constants";
 
 const PARAMS: {
   model?: GraphModel;
 } = {};
 
 export const predictEmotion = async (
-  pixels:
+  imgDt:
     | ImageData
     | HTMLImageElement
     | HTMLCanvasElement
     | HTMLVideoElement
     | ImageBitmap,
   numChannels?: number
-): Promise<void> => {
-  console.log("backend", getBackend());
-  console.log("env", env());
+): Promise<number[]> => {
+  if (PARAMS.model == null) PARAMS.model = await loadGraphModel(graphModelUrl);
 
-  const model = await loadGraphModel(MODEL_URL);
+  console.log(PARAMS.model?.modelVersion);
+  let tensor = browser.fromPixels(imgDt).div(255);
+  console.log(tensor.shape);
+  tensor = tensor.reshape([-1, 48, 48, 3]);
+  console.log(tensor.shape);
+  const r = PARAMS.model?.predict(tensor.toFloat(), { verbose: true });
+  console.log("R: ", r);
+  const tr = r as Tensor;
+  const tv = tr.dataSync();
+  console.log("tv ", tv);
 
-  console.log("model version: ", model.modelVersion);
-  console.log("model nodes: ", model.outputNodes);
-
-  // return PARAMS.model.predict(browser.fromPixels(pixels));
+  return Array.from(tv);
 };
 
 export const runEmotionDetection = async () => {
   // For Keras use tf.loadLayersModel().
-  const model = await loadGraphModel(MODEL_URL);
+  const model = await loadGraphModel(graphModelUrl);
   console.log("model version: ", model.modelVersion);
   console.log("model nodes: ", model.outputNodes);
   // model.predict(browser.fromPixels(cat));
