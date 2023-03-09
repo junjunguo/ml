@@ -5,7 +5,7 @@ import {
   type Tensor,
 } from "@tensorflow/tfjs";
 
-import { graphModelUrl } from "./constants";
+import { graphModelUrl, modelInputImg2Dshape } from "./constants";
 
 const PARAMS: {
   model?: GraphModel;
@@ -23,7 +23,10 @@ export const predictEmotion = async (
   if (PARAMS.model == null) PARAMS.model = await loadGraphModel(graphModelUrl);
 
   console.log(PARAMS.model?.modelVersion);
-  let tensor = browser.fromPixels(imgDt).div(255);
+  let tensor = browser
+    .fromPixels(imgDt)
+    .resizeBilinear([...modelInputImg2Dshape])
+    .div(255);
   console.log(tensor.shape);
   tensor = tensor.reshape([-1, 48, 48, 3]);
   console.log(tensor.shape);

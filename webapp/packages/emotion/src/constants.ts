@@ -16,3 +16,5 @@ export const emotionLabels = [
   "sadness",
   "surprise",
 ] as const;
+
+export const modelInputImg2Dshape = [48, 48] as const;
