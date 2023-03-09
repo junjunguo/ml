@@ -21,25 +21,23 @@ ChartJS.register(
   Legend
 );
 
-const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: "top" as const,
-    },
-    title: {
-      display: true,
-      text: "Emotion Detiction",
-    },
-  },
-};
-
 export const ChartjsBarChart: FC<{
   data: number[];
 }> = ({ data }) => {
   return (
     <Bar
-      options={options}
+      options={{
+        responsive: true,
+        plugins: {
+          legend: {
+            position: "top" as const,
+          },
+          title: {
+            display: true,
+            text: "Emotion Detiction",
+          },
+        },
+      }}
       data={{
         labels: [...emotionLabels],
         datasets: [
