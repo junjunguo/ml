@@ -51,6 +51,17 @@
       }
     }
 
+    & > .left {
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      align-items: center;
+      & > canvas {
+        padding: 0.6rem;
+        max-width: 100%;
+      }
+    }
+
     & > .chart {
       min-width: 480px;
     }
