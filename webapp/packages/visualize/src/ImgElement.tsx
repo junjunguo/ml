@@ -2,8 +2,9 @@ import React, { type FC, useEffect, useRef, useState } from "react";
 
 export const ImgElement: FC<{
   imgFile: File;
-  imgEvt: (imgEl: HTMLImageElement) => void;
-}> = ({ imgFile, imgEvt }) => {
+  imgEvt?: (imgEl: HTMLImageElement) => void;
+  title?: string;
+}> = ({ imgFile, imgEvt, title = "Selected Image" }) => {
   const ref = useRef<HTMLImageElement | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -14,11 +15,15 @@ export const ImgElement: FC<{
     setIsLoading(true);
 
     img.src = objUrl;
+    if (imgEvt == null) {
+      setIsLoading(false);
+      return;
+    }
     img.onload = () => {
       imgEvt(img);
       setIsLoading(false);
     };
   }, [ref.current, imgFile]);
 
-  return <img ref={ref} />;
+  return <img ref={ref} title={title} />;
 };

@@ -1,6 +1,6 @@
 import "./imgEmotionDetectionPage.scss";
 
-import { ChartjsBarChart, predictEmotion } from "@jj/emotion";
+import { ChartjsBarChart, ImgPreview, predictEmotion } from "@jj/emotion";
 import { ImgElement } from "@jj/visualize";
 import React, { type ChangeEvent, type FC, useState } from "react";
 
@@ -8,6 +8,9 @@ import { Nav } from "../../nav/Nav";
 
 export const ImgEmotionDetectionPage: FC = () => {
   const [imgFile, setImgFile] = useState<File | null>(null);
+  // const [imgDt, setImgDt] = useState<ImageBitmap | HTMLImageElement | null>(
+  //   null
+  // );
   const [chartData, setChartData] = useState<
     number[]
     // Array<{
@@ -17,14 +20,22 @@ export const ImgEmotionDetectionPage: FC = () => {
   >();
 
   const imgInputEventHandler = (e: ChangeEvent<HTMLInputElement>): void => {
-    // console.log("new img ", e.target.files?.[0].name);
-    if (e.target.files?.[0] != null) {
-      setImgFile(e.target.files[0]);
-    }
+    const file = e.target.files?.[0];
+    if (file == null) return;
+
+    setImgFile(file);
+
+    createImageBitmap(file)
+      .then((r) => {
+        // setImgDt(r);
+        imgElEventHandler(r);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
 
-  const imgElEventHandler = (imgEl: HTMLImageElement): void => {
-    // console.log("start predict");
+  const imgElEventHandler = (imgEl: HTMLImageElement | ImageBitmap): void => {
     predictEmotion(imgEl)
       .then((result) => {
         // console.log("r: ", result);
@@ -39,7 +50,8 @@ export const ImgEmotionDetectionPage: FC = () => {
   return (
     <div className="img-emotion-detection">
       <div className="main">
-        <div>
+        <div className="left">
+          {imgFile != null && <ImgPreview imgFile={imgFile} />}
           <input
             onChange={(e) => {
               imgInputEventHandler(e);
@@ -49,11 +61,7 @@ export const ImgEmotionDetectionPage: FC = () => {
             accept=".png, .jpg, .jpeg"
           />
         </div>
-        <div>
-          {imgFile != null && (
-            <ImgElement imgFile={imgFile} imgEvt={imgElEventHandler} />
-          )}
-        </div>
+        <div>{imgFile != null && <ImgElement imgFile={imgFile} />}</div>
         <div className="chart">
           {/* <TfVisBarChart data={chartData} /> */}
           {chartData != null && <ChartjsBarChart data={chartData} />}
