@@ -1,6 +1,6 @@
 import "./emotionDetectionPage.scss";
 
-import { runEmotionDetection } from "@jj/emotion";
+import { ChartjsBarChart, log, predictEmotion } from "@jj/emotion";
 import { STATE, VIDEO_SIZE } from "@jj/tf";
 import { VideoElement } from "@jj/visualize";
 import React, { type FC, useEffect, useState } from "react";
@@ -23,6 +23,7 @@ export const EmotionDetectionPage: FC = () => {
   );
 
   const [videoEl, setVideoEl] = useState<HTMLVideoElement | null>(null);
+  const [chartData, setChartData] = useState<number[]>();
 
   const mediaStreamHandler = (): void => {
     navigator.mediaDevices
@@ -30,9 +31,26 @@ export const EmotionDetectionPage: FC = () => {
       .then((stream) => {
         setMediaStream(stream);
       })
-      .catch((e) => {
-        console.error(e);
-      });
+      .catch(log);
+  };
+
+  let rafId;
+  const runDetection = async (): Promise<void> => {
+    await new Promise((resolve) => {
+      if (videoEl != null) {
+        predictEmotion(videoEl)
+          .then(setChartData)
+          .catch(log)
+          .finally(() => {
+            resolve(videoEl);
+          });
+      } else {
+        resolve(videoEl);
+      }
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    rafId = requestAnimationFrame(runDetection);
   };
 
   useEffect(() => {
@@ -40,11 +58,7 @@ export const EmotionDetectionPage: FC = () => {
   }, []);
 
   useEffect(() => {
-    if (videoEl != null) {
-      runEmotionDetection().catch((e) => {
-        console.log(e);
-      });
-    }
+    if (videoEl != null) runDetection().catch(log);
   }, [videoEl]);
 
   return (
@@ -53,6 +67,8 @@ export const EmotionDetectionPage: FC = () => {
         {mediaStream != null && (
           <VideoElement stream={mediaStream} videoEvt={setVideoEl} />
         )}
+
+        {chartData != null && <ChartjsBarChart data={chartData} />}
       </div>
 
       <div>

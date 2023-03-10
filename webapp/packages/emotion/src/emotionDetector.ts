@@ -27,10 +27,22 @@ export const predictEmotion = async (
   );
 };
 
-export const runEmotionDetection = async (): Promise<void> => {
-  // For Keras use tf.loadLayersModel().
-  const model = await loadGraphModel(graphModelUrl);
-  console.log("model version: ", model.modelVersion);
-  console.log("model nodes: ", model.outputNodes);
-  // model.predict(browser.fromPixels(cat));
-};
+// export const runEmotionDetection = async (
+//   imgDt:
+//     | ImageData
+//     | HTMLImageElement
+//     | HTMLCanvasElement
+//     | HTMLVideoElement
+//     | ImageBitmap,
+//   numChannels?: number
+// ): Promise<number[]> => {
+//   if (PARAMS.model == null) PARAMS.model = await loadGraphModel(graphModelUrl);
+
+//   return Array.from(
+//     (
+//       PARAMS.model?.predict(
+//         processImgDt(imgDt, numChannels).reshape([-1, 48, 48, 3]).toFloat()
+//       ) as Tensor
+//     ).dataSync()
+//   );
+// };

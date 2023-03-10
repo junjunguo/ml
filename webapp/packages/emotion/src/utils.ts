@@ -28,3 +28,7 @@ export const tensorToPixels = async (
   numChannels?: number
 ): Promise<Uint8ClampedArray> =>
   await browser.toPixels(processImgDt(imgDt, numChannels) as Tensor3D, canvas);
+
+export const log = (m: any): void => {
+  console.log(m);
+};
