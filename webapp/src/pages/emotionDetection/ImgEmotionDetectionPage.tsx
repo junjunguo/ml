@@ -8,9 +8,6 @@ import { Nav } from "../../nav/Nav";
 
 export const ImgEmotionDetectionPage: FC = () => {
   const [imgFile, setImgFile] = useState<File | null>(null);
-  // const [imgDt, setImgDt] = useState<ImageBitmap | HTMLImageElement | null>(
-  //   null
-  // );
   const [chartData, setChartData] = useState<
     number[]
     // Array<{
@@ -27,7 +24,6 @@ export const ImgEmotionDetectionPage: FC = () => {
 
     createImageBitmap(file)
       .then((r) => {
-        // setImgDt(r);
         imgElEventHandler(r);
       })
       .catch((e) => {
@@ -38,7 +34,6 @@ export const ImgEmotionDetectionPage: FC = () => {
   const imgElEventHandler = (imgEl: HTMLImageElement | ImageBitmap): void => {
     predictEmotion(imgEl)
       .then((result) => {
-        // console.log("r: ", result);
         // setChartData(result.map((v, i) => ({ index: i, value: v })));
         setChartData(result);
       })
