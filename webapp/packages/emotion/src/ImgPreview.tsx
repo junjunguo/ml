@@ -1,7 +1,7 @@
-import { browser, type Tensor3D } from "@tensorflow/tfjs";
 import React, { type FC, useEffect, useRef, useState } from "react";
 
 import { modelInputImg2Dshape } from "./constants";
+import { tensorToPixels } from "./utils";
 
 /**
  * A preview of same size image that is send in for predict
@@ -17,13 +17,7 @@ export const ImgPreview: FC<{
     imgEl: ImageBitmap,
     canvas: HTMLCanvasElement
   ): void => {
-    const tensor: Tensor3D = browser
-      .fromPixels(imgEl)
-      .resizeBilinear([...modelInputImg2Dshape])
-      .div(255);
-
-    browser
-      .toPixels(tensor, canvas)
+    tensorToPixels(canvas, imgEl)
       .catch((e) => {
         console.log(e);
       })
