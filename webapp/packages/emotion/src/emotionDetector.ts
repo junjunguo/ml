@@ -16,7 +16,10 @@ export const predictEmotion = async (
     | ImageBitmap,
   numChannels?: number
 ): Promise<number[]> => {
-  if (PARAMS.model == null) PARAMS.model = await loadGraphModel(graphModelUrl);
+  if (PARAMS.model == null)
+    PARAMS.model = await loadGraphModel(graphModelUrl, {
+      weightPathPrefix: process.env.BASE_URL,
+    });
 
   return Array.from(
     (
