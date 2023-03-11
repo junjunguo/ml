@@ -5,12 +5,19 @@
   align-items: center;
 
   & .main {
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
     & > video {
       transform: scaleX(-1);
       // visibility: hidden;
       width: auto;
       height: auto;
+      padding: 1rem;
+    }
+
+    & > canvas {
+      padding: 1rem;
     }
   }
   & nav > ul > li {
