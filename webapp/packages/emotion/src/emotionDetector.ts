@@ -18,9 +18,8 @@ export const predictEmotion = async (
 ): Promise<number[]> => {
   if (PARAMS.model == null)
     PARAMS.model = await loadGraphModel(graphModelUrl, {
-      weightPathPrefix: process.env.BASE_URL,
+      weightPathPrefix: import.meta.env.BASE_URL,
     });
-
   return Array.from(
     (
       PARAMS.model?.predict(
