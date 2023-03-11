@@ -23,7 +23,8 @@ ChartJS.register(
 
 export const ChartjsBarChart: FC<{
   data: number[];
-}> = ({ data }) => {
+  performanceMode?: boolean;
+}> = ({ data, performanceMode = false }) => {
   return (
     <Bar
       options={{
@@ -35,6 +36,17 @@ export const ChartjsBarChart: FC<{
           title: {
             display: true,
             text: "Emotion Detiction",
+          },
+        },
+        animation: performanceMode ? false : undefined,
+        scales: {
+          x: {
+            type: "category",
+          },
+          y: {
+            type: "linear",
+            max: 1,
+            min: 0,
           },
         },
       }}

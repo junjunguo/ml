@@ -1,7 +1,6 @@
 import "./emotionDetectionPage.scss";
 
 import { ChartjsBarChart, log, predictEmotion } from "@jj/emotion";
-import { STATE, VIDEO_SIZE } from "@jj/tf";
 import { VideoElement } from "@jj/visualize";
 import React, { type FC, useEffect, useState } from "react";
 
@@ -13,7 +12,9 @@ const mediaConfig: MediaStreamConstraints = {
     // front camera if available
     facingMode: "user",
     frameRate: { ideal: 60 },
-    ...VIDEO_SIZE[STATE.camera.sizeOption],
+    // ...VIDEO_SIZE[STATE.camera.sizeOption],
+    height: 360,
+    width: 360,
   },
 };
 
@@ -34,20 +35,45 @@ export const EmotionDetectionPage: FC = () => {
       .catch(log);
   };
 
-  let rafId;
+  let rafId: number;
+  const fps = 5;
+  let now;
+  let then = Date.now();
+  const interval = 1000 / fps;
+  let delta;
   const runDetection = async (): Promise<void> => {
-    await new Promise((resolve) => {
-      if (videoEl != null) {
-        predictEmotion(videoEl)
-          .then(setChartData)
-          .catch(log)
-          .finally(() => {
-            resolve(videoEl);
-          });
-      } else {
-        resolve(videoEl);
-      }
-    });
+    now = Date.now();
+    delta = now - then;
+
+    if (delta > interval) {
+      // update time stuffs
+
+      // Just `then = now` is not enough.
+      // Lets say we set fps at 10 which means
+      // each frame must take 100ms
+      // Now frame executes in 16ms (60fps) so
+      // the loop iterates 7 times (16*7 = 112ms) until
+      // delta > interval === true
+      // Eventually this lowers down the FPS as
+      // 112*10 = 1120ms (NOT 1000ms).
+      // So we have to get rid of that extra 12ms
+      // by subtracting delta (112) % interval (100).
+
+      then = now - (delta % interval);
+
+      await new Promise((resolve) => {
+        if (videoEl != null) {
+          predictEmotion(videoEl)
+            .then(setChartData)
+            .catch(log)
+            .finally(() => {
+              resolve(videoEl);
+            });
+        } else {
+          resolve(videoEl);
+        }
+      });
+    }
 
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     rafId = requestAnimationFrame(runDetection);
@@ -55,6 +81,10 @@ export const EmotionDetectionPage: FC = () => {
 
   useEffect(() => {
     mediaStreamHandler();
+
+    return () => {
+      cancelAnimationFrame(rafId);
+    };
   }, []);
 
   useEffect(() => {
@@ -68,7 +98,9 @@ export const EmotionDetectionPage: FC = () => {
           <VideoElement stream={mediaStream} videoEvt={setVideoEl} />
         )}
 
-        {chartData != null && <ChartjsBarChart data={chartData} />}
+        {chartData != null && (
+          <ChartjsBarChart performanceMode data={chartData} />
+        )}
       </div>
 
       <div>
