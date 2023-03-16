@@ -3,7 +3,8 @@ import React, { type FC, useEffect, useRef } from "react";
 export const CanvasElement: FC<{
   videoEl: HTMLVideoElement;
   ctxEvt: (ctx: CanvasRenderingContext2D) => void;
-}> = ({ videoEl, ctxEvt }) => {
+  noAdjust?: boolean;
+}> = ({ videoEl, ctxEvt, noAdjust = false }) => {
   const ref = useRef<HTMLCanvasElement | null>(null);
 
   const canvasHandler = (canvas: HTMLCanvasElement): void => {
@@ -12,9 +13,10 @@ export const CanvasElement: FC<{
     const ctx = canvas.getContext("2d");
     if (ctx == null) return;
 
-    ctx.translate(videoEl.videoWidth, 0);
-    ctx.scale(-1, 1);
-
+    if (!noAdjust) {
+      ctx.translate(videoEl.videoWidth, 0);
+      ctx.scale(-1, 1);
+    }
     ctxEvt(ctx);
   };
 

@@ -1,109 +1,126 @@
 import "./objectDetectionPage.scss";
 
-import { ImgElement } from "@jj/visualize";
-import * as tf from "@tensorflow/tfjs";
-import React, { type ChangeEvent, type FC, useState } from "react";
+import { log } from "@jj/emotion";
+import { type DetectedObject, ssdMobileNetV2 } from "@jj/mobilenet";
+import { hexColors } from "@jj/mobilenet";
+import { CanvasElement, VideoElement } from "@jj/visualize";
+import React, { type FC, useEffect, useState } from "react";
 
 import { Nav } from "../../nav/Nav";
 
-// const model: tf.GraphModel | null = null;
-
-/** TODO
- * Source: TF hub
- * https://tfhub.dev/tensorflow/tfjs-model/ssd_mobilenet_v2/1/default/1
- */
-const objDetection = async (
-  imgDt:
-    | ImageData
-    | HTMLImageElement
-    | HTMLCanvasElement
-    | HTMLVideoElement
-    | ImageBitmap,
-  numChannels?: number
-): Promise<void> => {
-  // const modelUrl =
-  //   "https://storage.googleapis.com/tfjs-models/savedmodel/mobilenet_v2_1.0_224/model.json";
-  // const model = await tf.loadGraphModel(modelUrl);
-
-  const modelUrl =
-    "https://tfhub.dev/google/imagenet/mobilenet_v2_140_224/classification/2";
-  const model = await tf.loadGraphModel(modelUrl, { fromTFHub: true });
-  const zeros = tf.zeros([1, 224, 224, 3]);
-  const mpz = model.predict(zeros);
-  console.log("mpz: ", mpz);
-  const aT = mpz as tf.Tensor;
-  aT.print();
-  const tv = aT.dataSync();
-  console.log("tensorflow data: ", tv);
-
-  // OK ^
-
-  // if (model == null)
-  //   model = await tf.loadGraphModel(
-  //     "https://tfhub.dev/tensorflow/tfjs-model/ssd_mobilenet_v2/1/default/1",
-  //     { fromTFHub: true }
-  //   );
-
-  // const zeros = tf.zeros([1, 224, 224, 3]);
-  // const zr = model.predict(zeros);
-  // console.log("zr: ", zr);
-  // (zr as tf.Tensor).print();
-
-  // console.log(model?.modelVersion);
-  // let tensor = tf.browser.fromPixels(imgDt);
-  // // tensor = tensor.div(255);
-  // const td = await tensor.data();
-  // console.log("tensor.data[0]", td[0]);
-  // tensor = tensor.reshape([-1, 48, 48, 3]);
-  // console.log("tensor.reshape:", tensor);
-  // const r = model?.predict(tensor);
-  // console.log("predict result r: ", r);
-
-  // const rt = r as tf.Tensor;
-  // tf.print(rt);
-  // console.log("rt ", rt.shape);
+const mediaConfig: MediaStreamConstraints = {
+  audio: false,
+  video: {
+    // front camera if available
+    facingMode: "user",
+    frameRate: { ideal: 60 },
+    // ...VIDEO_SIZE[STATE.camera.sizeOption],
+    height: 360,
+    width: 360,
+  },
 };
+export const ObjectDetectionPage: FC<{ detectionPerSec?: number }> = ({
+  detectionPerSec = 20,
+}) => {
+  const [mediaStream, setMediaStream] = useState<MediaStream | undefined>(
+    undefined
+  );
 
-export const ObjectDetectionPage: FC = () => {
-  const [imgFile, setImgFile] = useState<File | null>(null);
+  const [videoEl, setVideoEl] = useState<HTMLVideoElement | null>(null);
+  const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
 
-  const imgInputEventHandler = (e: ChangeEvent<HTMLInputElement>): void => {
-    if (e.target.files?.[0] != null) {
-      setImgFile(e.target.files[0]);
-    }
-  };
-
-  const imgElEventHandler = (imgEl: HTMLImageElement): void => {
-    console.log("start predict");
-    objDetection(imgEl)
-      .then((result) => {
-        console.log("r: ", result);
+  const mediaStreamHandler = (): void => {
+    navigator.mediaDevices
+      .getUserMedia(mediaConfig)
+      .then((stream) => {
+        setMediaStream(stream);
       })
-      .catch((e) => {
-        console.log(e);
-      });
+      .catch(log);
   };
+
+  const ctxDraw = (result: DetectedObject[]): void => {
+    if (ctx == null || videoEl == null) return;
+    // ctx.drawImage(videoEl, 0, 0, videoEl.videoWidth, videoEl.videoHeight);
+    ctx.drawImage(videoEl, 0, 0);
+    // ctx.font = "10px Arial";
+
+    // console.log("number of detections: ", result.length);
+    // const colors = [...hexColors];
+    for (let i = 0; i < result.length; i++) {
+      // const color = colors.splice(
+      //   Math.round(Math.random() * 100) % colors.length,
+      //   1
+      // )[0];
+      const color = hexColors[i % hexColors.length];
+      ctx.beginPath();
+      ctx.rect(...result[i].bbox);
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = color;
+      ctx.fillStyle = color;
+      ctx.stroke();
+      ctx.fillText(
+        result[i].score.toFixed(3) + " " + result[i].class,
+        result[i].bbox[0],
+        result[i].bbox[1] > 10 ? result[i].bbox[1] - 5 : 10
+      );
+    }
+
+    // ctx.translate(videoEl.videoWidth, 0);
+    // ctx.scale(-1, 1);
+  };
+
+  let rafId: number;
+  let now;
+  let then = Date.now();
+  const interval = 1000 / detectionPerSec;
+  let delta;
+  const runDetection = async (): Promise<void> => {
+    if (videoEl != null && ctx != null) {
+      now = Date.now();
+      delta = now - then;
+
+      if (delta > interval) {
+        then = now - (delta % interval);
+
+        await new Promise((resolve) => {
+          ssdMobileNetV2(videoEl)
+            .then(ctxDraw)
+            .catch(log)
+            .finally(() => {
+              resolve(videoEl);
+            });
+        });
+      }
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    rafId = requestAnimationFrame(runDetection);
+  };
+
+  useEffect(() => {
+    mediaStreamHandler();
+
+    return () => {
+      cancelAnimationFrame(rafId);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (videoEl != null && ctx != null) runDetection().catch(log);
+  }, [videoEl, ctx]);
 
   return (
     <div className="object-detection">
       <div className="main">
-        <div>
-          <input
-            onChange={(e) => {
-              imgInputEventHandler(e);
-            }}
-            type="file"
-            name="image"
-            accept=".png, .jpg, .jpeg"
-          />
-        </div>
-        <div>
-          {imgFile != null && (
-            <ImgElement imgFile={imgFile} imgEvt={imgElEventHandler} />
-          )}
-        </div>
-        <div></div>
+        {mediaStream != null && (
+          <VideoElement stream={mediaStream} videoEvt={setVideoEl} hide />
+        )}
+
+        {videoEl != null && (
+          <CanvasElement ctxEvt={setCtx} videoEl={videoEl} noAdjust />
+        )}
       </div>
+
       <div>
         <Nav />
       </div>
