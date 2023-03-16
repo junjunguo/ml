@@ -9,16 +9,18 @@ export const Nav: FC = () => {
   return (
     <nav>
       <ul>
-        {Object.entries(RouterPath).map(([k, v]) => (
-          <li key={k}>
-            <NavLink
-              to={v}
-              className={({ isActive }) => (isActive ? "active" : undefined)}
-            >
-              {k}
-            </NavLink>
-          </li>
-        ))}
+        {Object.entries(RouterPath)
+          .filter(([k, v]) => [RouterPath.FaceDetection].some((p) => p !== v))
+          .map(([k, v]) => (
+            <li key={k}>
+              <NavLink
+                to={v}
+                className={({ isActive }) => (isActive ? "active" : undefined)}
+              >
+                {k}
+              </NavLink>
+            </li>
+          ))}
       </ul>
     </nav>
   );
