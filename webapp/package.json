@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "@iconify/react": "^4.1.0",
+    "@tensorflow-models/coco-ssd": "^2.2.2",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
@@ -60,6 +61,7 @@
   "workspaces": [
     "packages/visualize",
     "packages/emotion",
-    "packages/tf"
+    "packages/tf",
+    "packages/mobilenet"
   ]
 }

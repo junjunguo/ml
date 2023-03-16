@@ -1,0 +1,12 @@
+{
+  "name": "@jj/mobilenet",
+  "version": "1.0.0",
+  "description": "ssd mobilenet",
+  "main": "index.ts",
+  "homepage": "https://junjunguo.github.io/ml/",
+  "repository": {
+    "type": "github",
+    "directory": "webapp/packages/mobilenet",
+    "url": "https://github.com/junjunguo/ml.git"
+  }
+}

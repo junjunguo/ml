@@ -8,15 +8,15 @@
     flex-wrap: wrap;
     justify-content: center;
 
-    & > div {
-      padding: 0.6rem;
-      min-width: 2rem;
-      min-height: 2rem;
-      background-color: rgba(0, 128, 0, 0.648);
+    & > * {
+      padding: 0.2rem;
+    }
 
-      & > input {
-        margin: 1rem;
-      }
+    & > video {
+      transform: scaleX(-1);
+      // visibility: hidden;
+      width: auto;
+      height: auto;
     }
   }
 

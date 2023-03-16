@@ -10,7 +10,7 @@ import {
   ImgEmotionDetectionPage,
 } from "./pages/emotionDetection";
 import { FaceDetectionPage } from "./pages/faceDetection";
-import { ObjectDetectionPage } from "./pages/objectDetection/objectDetectionPage";
+import { ObjectDetectionPage } from "./pages/objectDetection";
 import { RouterPath } from "./types/RouterPath.enum";
 
 const router = createHashRouter([
