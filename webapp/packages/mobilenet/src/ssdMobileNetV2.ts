@@ -13,12 +13,7 @@ import {
 } from "@tensorflow/tfjs";
 
 import { CLASSES } from "./classes";
-
-/**
- * https://tfhub.dev/tensorflow/tfjs-model/ssd_mobilenet_v2/1/default/1
- */
-const tfHubUrl =
-  "https://tfhub.dev/tensorflow/tfjs-model/ssd_mobilenet_v2/1/default/1";
+import { graphModelRoot, graphModelUrl } from "./constants";
 
 const PARAMS: {
   model?: GraphModel;
@@ -103,9 +98,12 @@ export const ssdMobileNetV2 = async (
   minScore: number = 0.5
 ): Promise<DetectedObject[]> => {
   if (PARAMS.model == null)
-    PARAMS.model = await loadGraphModel(tfHubUrl, {
-      fromTFHub: true,
+    PARAMS.model = await loadGraphModel(graphModelUrl, {
+      weightPathPrefix: `${import.meta.env.BASE_URL}${graphModelRoot}/`,
     });
+  // PARAMS.model = await loadGraphModel(tfHubUrl, {
+  //   fromTFHub: true,
+  // });
 
   const batched = tidy(() => {
     const img = browser.fromPixels(imgDt, numChannels);
