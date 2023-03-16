@@ -14,3 +14,12 @@ export const hexColors = [
   "#223700",
   "#CB005B",
 ] as const;
+
+/**
+ * https://tfhub.dev/tensorflow/tfjs-model/ssd_mobilenet_v2/1/default/1
+ */
+export const tfHubUrl =
+  "https://tfhub.dev/tensorflow/tfjs-model/ssd_mobilenet_v2/1/default/1";
+
+export const graphModelRoot = "ssd_mobilenet_v2_1_default_1";
+export const graphModelUrl = `${graphModelRoot}/model.json`;
