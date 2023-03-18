@@ -117,7 +117,12 @@ export const ObjectDetectionPage: FC<{ detectionPerSec?: number }> = ({
         )}
 
         {videoEl != null && (
-          <CanvasElement ctxEvt={setCtx} videoEl={videoEl} noAdjust />
+          <CanvasElement
+            ctxEvt={setCtx}
+            width={videoEl.videoWidth}
+            height={videoEl.videoHeight}
+            noAdjust
+          />
         )}
       </div>
 

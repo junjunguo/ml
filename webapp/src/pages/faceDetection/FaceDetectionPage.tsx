@@ -53,7 +53,13 @@ export const FaceDetectionPage: FC = () => {
   return (
     <div className="face-detection">
       <div className="main">
-        {videoEl != null && <CanvasElement videoEl={videoEl} ctxEvt={setCtx} />}
+        {videoEl != null && (
+          <CanvasElement
+            height={videoEl.videoHeight}
+            width={videoEl.videoWidth}
+            ctxEvt={setCtx}
+          />
+        )}
         {mediaStream != null && (
           <VideoElement stream={mediaStream} videoEvt={setVideoEl} />
         )}
