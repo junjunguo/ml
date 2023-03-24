@@ -97,10 +97,12 @@ export const ssdMobileNetV2 = async (
   maxNumBoxes: number = 20,
   minScore: number = 0.5
 ): Promise<DetectedObject[]> => {
-  if (PARAMS.model == null)
+  if (PARAMS.model == null) {
     PARAMS.model = await loadGraphModel(graphModelUrl, {
       weightPathPrefix: `${import.meta.env.BASE_URL}${graphModelRoot}/`,
     });
+  }
+
   // PARAMS.model = await loadGraphModel(tfHubUrl, {
   //   fromTFHub: true,
   // });

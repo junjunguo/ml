@@ -1,9 +1,11 @@
 import "./faceDetectionPage.scss";
 
-import { runFaceDetecter, STATE, VIDEO_SIZE } from "@jj/tf";
+import { log } from "@jj/emotion";
+import { hexColors } from "@jj/mobilenet";
 import { CanvasElement, VideoElement } from "@jj/visualize";
 import React, { type FC, useEffect, useState } from "react";
 
+import { faceDetectionShortV1 } from "../../../packages/tf/src/faceDetectionShort";
 import { Nav } from "../../nav/Nav";
 
 const mediaConfig: MediaStreamConstraints = {
@@ -12,14 +14,14 @@ const mediaConfig: MediaStreamConstraints = {
     // front camera if available
     facingMode: "user",
     frameRate: { ideal: 60 },
-    ...VIDEO_SIZE[STATE.camera.sizeOption],
+    // ...VIDEO_SIZE[STATE.camera.sizeOption],
+    height: 360,
+    width: 360,
   },
 };
-
-/***
- * @see https://github.com/tensorflow/tfjs-models/blob/master/face-detection/README.md
- */
-export const FaceDetectionPage: FC = () => {
+export const FaceDetectionPage: FC<{ detectionPerSec?: number }> = ({
+  detectionPerSec = 20,
+}) => {
   const [mediaStream, setMediaStream] = useState<MediaStream | undefined>(
     undefined
   );
@@ -33,35 +35,96 @@ export const FaceDetectionPage: FC = () => {
       .then((stream) => {
         setMediaStream(stream);
       })
-      .catch((e) => {
-        console.error(e);
-      });
+      .catch(log);
+  };
+
+  // const ctxDraw = (result: DetectedObject[]): void => {
+  //   if (ctx == null || videoEl == null) return;
+  //   // ctx.drawImage(videoEl, 0, 0, videoEl.videoWidth, videoEl.videoHeight);
+  //   ctx.drawImage(videoEl, 0, 0);
+  //   // ctx.font = "10px Arial";
+
+  //   // console.log("number of detections: ", result.length);
+  //   // const colors = [...hexColors];
+  //   for (let i = 0; i < result.length; i++) {
+  //     // const color = colors.splice(
+  //     //   Math.round(Math.random() * 100) % colors.length,
+  //     //   1
+  //     // )[0];
+  //     const color = hexColors[i % hexColors.length];
+  //     ctx.beginPath();
+  //     ctx.rect(...result[i].bbox);
+  //     ctx.lineWidth = 1;
+  //     ctx.strokeStyle = color;
+  //     ctx.fillStyle = color;
+  //     ctx.stroke();
+  //     ctx.fillText(
+  //       result[i].score.toFixed(3) + " " + result[i].class,
+  //       result[i].bbox[0],
+  //       result[i].bbox[1] > 10 ? result[i].bbox[1] - 5 : 10
+  //     );
+  //   }
+
+  //   // ctx.translate(videoEl.videoWidth, 0);
+  //   // ctx.scale(-1, 1);
+  // };
+
+  let rafId: number;
+  let now;
+  let then = Date.now();
+  const interval = 1000 / detectionPerSec;
+  let delta;
+  const runDetection = async (): Promise<void> => {
+    if (videoEl != null && ctx != null) {
+      now = Date.now();
+      delta = now - then;
+
+      if (delta > interval) {
+        then = now - (delta % interval);
+
+        await new Promise((resolve) => {
+          faceDetectionShortV1(videoEl)
+            .then((c) => {
+              console.log(c);
+            })
+            .catch(log)
+            .finally(() => {
+              resolve(videoEl);
+            });
+        });
+      }
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    rafId = requestAnimationFrame(runDetection);
   };
 
   useEffect(() => {
     mediaStreamHandler();
+
+    return () => {
+      cancelAnimationFrame(rafId);
+    };
   }, []);
 
   useEffect(() => {
-    if (ctx != null && videoEl != null) {
-      runFaceDetecter(videoEl, ctx).catch((e) => {
-        console.error(e);
-      });
-    }
-  }, [ctx, videoEl]);
+    if (videoEl != null && ctx != null) runDetection().catch(log);
+  }, [videoEl, ctx]);
 
   return (
     <div className="face-detection">
       <div className="main">
+        {mediaStream != null && (
+          <VideoElement stream={mediaStream} videoEvt={setVideoEl} hide />
+        )}
+
         {videoEl != null && (
           <CanvasElement
-            height={videoEl.videoHeight}
-            width={videoEl.videoWidth}
             ctxEvt={setCtx}
+            width={videoEl.videoWidth}
+            height={videoEl.videoHeight}
+            noAdjust
           />
-        )}
-        {mediaStream != null && (
-          <VideoElement stream={mediaStream} videoEvt={setVideoEl} />
         )}
       </div>
 

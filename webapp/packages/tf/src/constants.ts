@@ -76,3 +76,29 @@ export const TUNABLE_FLAG_NAME_MAP = {
   WEBGL_RENDER_FLOAT32_CAPABLE: "enable float32",
   WEBGL_FLUSH_THRESHOLD: "GL flush wait time(ms)",
 };
+
+// ^ to be removed ^
+
+/**
+ * tfhub.dev
+ */
+export const tfHubUrls = {
+  /**
+   * https://tfhub.dev/mediapipe/tfjs-model/face_detection/short/1
+   *
+   * Single-Shot multibox Detection (SSD)
+   */
+  faceDetection:
+    "https://tfhub.dev/mediapipe/tfjs-model/face_detection/short/1",
+};
+
+export const graphModels: Record<string, { root: string; model: string }> = {
+  /**
+   * Source: https://tfhub.dev/mediapipe/tfjs-model/face_detection/short/1
+   * face_detection/short
+   */
+  faceDetection: {
+    root: "tfjs-model_face_detection_short_1",
+    model: "tfjs-model_face_detection_short_1/model.json",
+  },
+} as const;

@@ -10,7 +10,11 @@ export const Nav: FC = () => {
     <nav>
       <ul>
         {Object.entries(RouterPath)
-          .filter(([k, v]) => [RouterPath.FaceDetection].some((p) => p !== v))
+          // .filter(([k, v]) =>
+          //   [
+          //     // hide RouterPath in navigation
+          //   ].some((p) => p !== v)
+          // )
           .map(([k, v]) => (
             <li key={k}>
               <NavLink
